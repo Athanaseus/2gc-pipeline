@@ -16,7 +16,7 @@ Usage
 -----
 
 ```
-$ python selfcal_pipeline.py
+$ python3 selfcal_pipeline.py
 ```
 
 In the source folder.
