@@ -7,7 +7,7 @@ This is the CWL version of the 2GC pipeline.
 Requirements
 ------------
 
-* Make
+* Stimela
 * Python 3
 * Docker
 
@@ -16,7 +16,7 @@ Usage
 -----
 
 ```
-$ make
+$ python selfcal_pipeline.py
 ```
 
 In the source folder.
