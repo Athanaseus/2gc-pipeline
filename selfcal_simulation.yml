@@ -1,0 +1,71 @@
+calibration_bbc_save_to: selfcal_bbc-gains.parmdb
+calibration_data_column: DATA
+calibration_data_freq_chunk: 12
+calibration_data_time_chunk: 24
+calibration_dist_ncpu: 16
+calibration_g_clip_high: 2.0
+calibration_g_clip_low: 0.5
+calibration_g_freq_int: 0
+calibration_g_save_to: selfcal_g-gains.parmdb
+calibration_g_solvable: true
+calibration_g_time_int: 16
+calibration_g_type: complex-2x2
+calibration_log_boring: true
+calibration_madmax_enable: true
+calibration_madmax_estimate: corr
+calibration_madmax_plot: true
+calibration_madmax_threshold:
+- 0.0
+- 10.0
+calibration_model_expression:
+- lsm_0
+calibration_montblanc_dtype: float
+calibration_montblanc_mem_budget: 1024
+calibration_out_casa_gaintables: true
+calibration_out_mode: sc
+calibration_out_name: selfcal
+calibration_out_overwrite: true
+calibration_out_plots: true
+calibration_sel_ddid: '0'
+calibration_shared_memory: 4096
+calibration_sol_jones: G
+calibration_sol_term_iters: '50'
+calibration_weight_column: WEIGHT
+convertcatalog_output_format: Tigger
+convertcatalog_output_skymodel: selfcal-catalog_conv.lsm.html
+convertcatalog_output_type: Tigger
+convertcatalog_rename: true
+convertcatalog_type: auto
+convertfits_outfile: selfcal-catalog.lsm.html
+makeimage_auto_threshold: 5
+makeimage_channels_out: 2
+makeimage_datacolumn: DATA
+makeimage_join_channels: true
+makeimage_mgain: 0.95
+makeimage_name: selfcal
+makeimage_niter: 10000
+makeimage_scale: 1.0asec
+makeimage_size:
+- 256
+- 256
+makems_dfreq: 1000000.0
+makems_direction: J2000,0deg,-30deg
+makems_dtime: 5
+makems_freq0: 1420000000.0
+makems_msname: meerkat_SourceRecovery.ms
+makems_nchan: 4
+makems_synthesis: 0.5
+makems_telescope: meerkat
+simsky_config:
+  class: File
+  path: input/tdlconf.profiles
+simsky_output_column: DATA
+simsky_sefd: 551
+simsky_skymodel:
+  class: File
+  path: input/point_skymodel.txt
+simsky_use_smearing: false
+sourcefinder_format: fits
+sourcefinder_outfile: selfcal-catalog.fits
+sourcefinder_thresh_isl: 20
+sourcefinder_thresh_pix: 10
