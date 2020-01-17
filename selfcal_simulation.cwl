@@ -183,7 +183,7 @@ outputs:
     type: Directory
 steps:
   simms:
-    run: /home/aramaila/gitPackages/Stimela/stimela/cargo/cab/simms.cwl
+    run: cwlfiles/simms.cwl
     in:
       msname: makems_msname
       dtime: makems_dtime
@@ -196,7 +196,7 @@ steps:
     out:
     - msname_out
   simulator:
-    run: /home/aramaila/gitPackages/Stimela/stimela/cargo/cab/simulator.cwl
+    run: cwlfiles/simulator.cwl
     in:
       msname: simms/msname_out
       use_smearing: simsky_use_smearing
@@ -207,7 +207,7 @@ steps:
     out:
     - msname_out
   wsclean:
-    run: /home/aramaila/gitPackages/Stimela/stimela/cargo/cab/wsclean.cwl
+    run: cwlfiles/wsclean.cwl
     in:
       msname: simulator/msname_out
       niter: makeimage_niter
@@ -224,7 +224,7 @@ steps:
     - images_out
     - msname_out
   pybdsf:
-    run: /home/aramaila/gitPackages/Stimela/stimela/cargo/cab/pybdsf.cwl
+    run: cwlfiles/pybdsf.cwl
     in:
       thresh_isl: sourcefinder_thresh_isl
       filename: wsclean/image_out
@@ -235,7 +235,7 @@ steps:
     - model_out
     - models_out
   bdsf_fits2lsm:
-    run: /home/aramaila/gitPackages/Stimela/stimela/cargo/cab/bdsf_fits2lsm.cwl
+    run: cwlfiles/bdsf_fits2lsm.cwl
     in:
       phase_centre_image: wsclean/image_out
       outfile: convertfits_outfile
@@ -244,7 +244,7 @@ steps:
     - model_out
     - models_out
   tigger_convert:
-    run: /home/aramaila/gitPackages/Stimela/stimela/cargo/cab/tigger_convert.cwl
+    run: cwlfiles/tigger_convert.cwl
     in:
       output_format: convertcatalog_output_format
       output_type: convertcatalog_output_type
@@ -256,7 +256,7 @@ steps:
     - model_out
     - models_out
   cubical:
-    run: /home/aramaila/gitPackages/Stimela/stimela/cargo/cab/cubical.cwl
+    run: cwlfiles/cubical.cwl
     in:
       model_expression: calibration_model_expression
       g_time_int: calibration_g_time_int
