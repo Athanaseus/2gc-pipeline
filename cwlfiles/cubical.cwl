@@ -2298,11 +2298,7 @@ outputs:
   parmdb_save_out:
     type: File[]
     outputBinding:
-      glob: "*parmdb"
-  parmdb_save_out:
-    type: File[]
-    outputBinding:
-      glob: "*parmdb.skel"
+      glob: "*parmdb*"
   data_ms_out:
     type: Directory
     outputBinding:
