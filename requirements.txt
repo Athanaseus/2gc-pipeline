@@ -1,2 +1,1 @@
-stimela
-toil[cwl]
+git+https://github.com/SpheMakh/Stimela@usecwl
