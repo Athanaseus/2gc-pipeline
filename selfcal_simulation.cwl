@@ -4,32 +4,32 @@ class: Workflow
 doc: selfcal_simulation
 inputs:
   makems_msname: string
-  makems_dtime: float
   makems_telescope: string
-  makems_nchan: int
-  makems_freq0: float
   makems_direction: string
-  makems_dfreq: float
   makems_synthesis: float
-  simsky_sefd: float
+  makems_dtime: float
+  makems_freq0: float
+  makems_dfreq: float
+  makems_nchan: int
+  simsky_config: File
   simsky_use_smearing: int
+  simsky_sefd: float
   simsky_output_column: string
   simsky_skymodel: File
-  simsky_config: File
-  makeimage_niter: int
-  makeimage_auto_threshold: float
-  makeimage_channels_out: int
-  makeimage_join_channels: boolean
-  makeimage_scale: string
-  makeimage_name: string
-  makeimage_datacolumn: string
-  makeimage_size:
+  makeimage1_name: string
+  makeimage1_datacolumn: string
+  makeimage1_save_source_list: boolean
+  makeimage1_scale: string
+  makeimage1_fit_spectral_pol: int
+  makeimage1_channels_out: int
+  makeimage1_join_channels: boolean
+  makeimage1_mgain: float
+  makeimage1_niter: int
+  makeimage1_auto_threshold: float
+  makeimage1_size:
     type:
       type: array
       items: int
-  makeimage_mgain: float
-  sourcefinder_thresh_isl: float
-  sourcefinder_thresh_pix: float
   sourcefinder_outfile: string
   sourcefinder_format:
     type:
@@ -44,8 +44,11 @@ inputs:
       - csv
       - casabox
       - sagecal
-      name: format8fbfeec3-5824-4e2e-9da4-42058f13dadb
+      name: format99addd81-2fa7-4f50-bd3f-d4e4f2009340
+  sourcefinder_thresh_isl: float
+  sourcefinder_thresh_pix: float
   convertfits_outfile: string
+  convertcatalog_output_skymodel: string
   convertcatalog_output_format:
     type:
       symbols:
@@ -58,8 +61,7 @@ inputs:
       - Gaul
       - auto
       type: enum
-      name: output_format6e00b8b5-328c-41c2-bccc-1e6a3d83b3a7
-  convertcatalog_output_skymodel: string
+      name: output_formata9b4377e-dcd8-4eb1-8e54-d2a47aa27c10
   convertcatalog_output_type:
     type:
       symbols:
@@ -69,7 +71,7 @@ inputs:
       - NEWSTAR
       - auto
       type: enum
-      name: output_typeee869295-59c6-482d-97b0-66a52835dd5f
+      name: output_typea0b4e6bd-1fc0-41c4-af8c-bc37f7371113
   convertcatalog_type:
     type:
       symbols:
@@ -82,47 +84,21 @@ inputs:
       - Gaul
       - auto
       type: enum
-      name: typec1de759b-ce5f-463c-8620-37d95c96f8a7
+      name: typebcc63315-baa3-4053-8ef9-c568901683d5
   convertcatalog_rename: boolean
+  calibration_data_column: string
+  calibration_out_column: string
   calibration_model_expression:
     type:
       type: array
       items: string
-  calibration_sol_term_iters: string
-  calibration_g_time_int: int
-  calibration_sel_ddid: string
-  calibration_madmax_plot: boolean
-  calibration_g_save_to: string
-  calibration_out_plots: boolean
-  calibration_weight_column: string
-  calibration_data_freq_chunk: int
-  calibration_sol_jones: string
-  calibration_g_freq_int: float
-  calibration_madmax_enable: boolean
-  calibration_dist_ncpu: int
-  calibration_bbc_save_to: string
-  calibration_montblanc_dtype: string
-  calibration_madmax_estimate:
-    type:
-      symbols:
-      - corr
-      - all
-      - diag
-      - offdiag
-      type: enum
-      name: madmax_estimate31f18e3f-fb94-40e6-a2ee-adf8c7632193
-  calibration_out_overwrite: boolean
-  calibration_shared_memory: int
-  calibration_g_clip_low: float
-  calibration_madmax_threshold:
-    type:
-      type: array
-      items: float
-  calibration_log_boring: boolean
-  calibration_data_column: string
-  calibration_g_type: string
-  calibration_montblanc_mem_budget: int
   calibration_data_time_chunk: int
+  calibration_data_freq_chunk: int
+  calibration_sel_ddid: string
+  calibration_dist_ncpu: int
+  calibration_sol_jones: string
+  calibration_sol_term_iters: string
+  calibration_out_name: string
   calibration_out_mode:
     type:
       symbols:
@@ -134,11 +110,82 @@ inputs:
       - ar
       - as
       type: enum
-      name: out_mode249f2d83-5779-423d-b324-5bde3eeddd3d
-  calibration_out_name: string
+      name: out_mode1046b230-6003-493a-9986-4c26611c3e4d
+  calibration_weight_column: string
+  calibration_montblanc_dtype: string
+  calibration_g_type: string
+  calibration_g_time_int: float
+  calibration_g_freq_int: float
+  calibration_g_save_to: string
+  calibration_bbc_save_to: string
+  calibration_g_clip_low: float
   calibration_g_clip_high: float
-  calibration_g_solvable: boolean
+  calibration_madmax_enable: boolean
+  calibration_madmax_plot: boolean
+  calibration_madmax_threshold:
+    type:
+      type: array
+      items: float
+  calibration_madmax_estimate:
+    type:
+      symbols:
+      - corr
+      - all
+      - diag
+      - offdiag
+      type: enum
+      name: madmax_estimate23d348ff-0726-49ec-82d7-fc68bf4dabea
+  calibration_out_plots: boolean
   calibration_out_casa_gaintables: boolean
+  calibration_g_solvable: boolean
+  calibration_out_overwrite: boolean
+  calibration_log_boring: boolean
+  calibration_shared_memory: int
+  calibration_montblanc_mem_budget: int
+  makeimage2_name: string
+  makeimage2_datacolumn: string
+  makeimage2_save_source_list: boolean
+  makeimage2_scale: string
+  makeimage2_fit_spectral_pol: int
+  makeimage2_channels_out: int
+  makeimage2_join_channels: boolean
+  makeimage2_mgain: float
+  makeimage2_niter: int
+  makeimage2_auto_threshold: float
+  makeimage2_size:
+    type:
+      type: array
+      items: int
+  makecube1_output: string
+  makecube1_stack: boolean
+  makecube1_fits_axis: string
+  sofia_mask_steps_doFlag: boolean
+  sofia_mask_steps_doScaleNoise: boolean
+  sofia_mask_steps_doSCfind: boolean
+  sofia_mask_steps_doMerge: boolean
+  sofia_mask_steps_doReliability: boolean
+  sofia_mask_steps_doParameterise: boolean
+  sofia_mask_steps_doWriteMask: boolean
+  sofia_mask_steps_doMom0: boolean
+  sofia_mask_steps_doMom1: boolean
+  sofia_mask_steps_doWriteCat: boolean
+  sofia_mask_steps_doCubelets: boolean
+  sofia_mask_scaleNoise_statistic: string
+  sofia_mask_SCfind_threshold: float
+  sofia_mask_SCfind_rmsMode: string
+  sofia_mask_merge_radiusX: int
+  sofia_mask_merge_radiusY: int
+  sofia_mask_merge_radiusZ: int
+  sofia_mask_merge_minSizeX: int
+  sofia_mask_merge_minSizeY: int
+  sofia_mask_merge_minSizeZ: int
+  sofia_mask_writeCat_basename: string
+  transfermodel_spectra: boolean
+  transfermodel_row_chunks: int
+  transfermodel_model_chunks: int
+  transfermodel_points_only: boolean
+  transfermodel_num_sources: int
+  transfermodel_num_workers: int
 outputs:
   makems:
     outputSource: simms/msname_out
@@ -146,17 +193,52 @@ outputs:
   simsky:
     outputSource: simulator/msname_out
     type: Directory
-  makeimage_0:
-    outputSource: wsclean/image_out
+  makeimage1_0:
+    outputSource: wsclean/dirty_image_out
     type: File
-  makeimage_1:
-    outputSource: wsclean/images_out
+  makeimage1_1:
+    outputSource: wsclean/dirty_images_out
     type:
       type: array
       items: File
-  makeimage_2:
+  makeimage1_2:
+    outputSource: wsclean/model_image_out
+    type: File
+  makeimage1_3:
+    outputSource: wsclean/model_images_out
+    type:
+      type: array
+      items: File
+  makeimage1_4:
     outputSource: wsclean/msname_out
     type: Directory
+  makeimage1_5:
+    outputSource: wsclean/psf_image_out
+    type: File
+  makeimage1_6:
+    outputSource: wsclean/psf_images_out
+    type:
+      type: array
+      items: File
+  makeimage1_7:
+    outputSource: wsclean/residual_image_out
+    type: File
+  makeimage1_8:
+    outputSource: wsclean/residual_images_out
+    type:
+      type: array
+      items: File
+  makeimage1_9:
+    outputSource: wsclean/restored_image_out
+    type: File
+  makeimage1_10:
+    outputSource: wsclean/restored_images_out
+    type:
+      type: array
+      items: File
+  makeimage1_11:
+    outputSource: wsclean/source_list
+    type: File
   sourcefinder_0:
     outputSource: pybdsf/model_out
     type: File
@@ -166,132 +248,321 @@ outputs:
       type: array
       items: File
   calibration_0:
-    outputSource: cubical/casa_plot_out
+    outputSource: tmpyh9lrhqj/casa_plot_out
     type:
-      type: array
+    - 'null'
+    - type: array
       items: Directory
   calibration_1:
-    outputSource: cubical/data_ms_out
+    outputSource: tmpyh9lrhqj/msname_out
     type: Directory
   calibration_2:
-    outputSource: cubical/parmdb_save_out
+    outputSource: tmpyh9lrhqj/parmdb_save_out
     type:
       type: array
       items: File
   calibration_3:
-    outputSource: cubical/plot_out
+    outputSource: tmpyh9lrhqj/plot_out
+    type: Directory
+  makeimage2_0:
+    outputSource: wsclean-1/dirty_image_out
+    type: File
+  makeimage2_1:
+    outputSource: wsclean-1/dirty_images_out
+    type:
+      type: array
+      items: File
+  makeimage2_2:
+    outputSource: wsclean-1/model_image_out
+    type: File
+  makeimage2_3:
+    outputSource: wsclean-1/model_images_out
+    type:
+      type: array
+      items: File
+  makeimage2_4:
+    outputSource: wsclean-1/msname_out
+    type: Directory
+  makeimage2_5:
+    outputSource: wsclean-1/psf_image_out
+    type: File
+  makeimage2_6:
+    outputSource: wsclean-1/psf_images_out
+    type:
+      type: array
+      items: File
+  makeimage2_7:
+    outputSource: wsclean-1/residual_image_out
+    type: File
+  makeimage2_8:
+    outputSource: wsclean-1/residual_images_out
+    type:
+      type: array
+      items: File
+  makeimage2_9:
+    outputSource: wsclean-1/restored_image_out
+    type: File
+  makeimage2_10:
+    outputSource: wsclean-1/restored_images_out
+    type:
+      type: array
+      items: File
+  makeimage2_11:
+    outputSource: wsclean-1/source_list
+    type: File
+  makecube1_0:
+    outputSource: fitstool/image_out
+    type: File
+  makecube1_1:
+    outputSource: fitstool/images_out
+    type:
+      type: array
+      items: File
+  sofia_mask_0:
+    outputSource: sofia/writeOutAscii
+    type:
+    - 'null'
+    - File
+  sofia_mask_1:
+    outputSource: sofia/writeOutCat
+    type:
+    - 'null'
+    - File
+  sofia_mask_2:
+    outputSource: sofia/writeOutCubelets
+    type:
+    - 'null'
+    - Directory
+  sofia_mask_3:
+    outputSource: sofia/writeOutMask
+    type:
+    - 'null'
+    - File
+  sofia_mask_4:
+    outputSource: sofia/writeOutMom0
+    type:
+    - 'null'
+    - File
+  sofia_mask_5:
+    outputSource: sofia/writeOutMom1
+    type:
+    - 'null'
+    - File
+  sofia_mask_6:
+    outputSource: sofia/writeOutNrch
+    type:
+    - 'null'
+    - File
+  transfermodel:
+    outputSource: crystalball/msname_out
     type: Directory
 steps:
   simms:
-    run: cwlfiles/simms.cwl
+    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/simms.cwl
     in:
-      msname: makems_msname
-      dtime: makems_dtime
       telescope: makems_telescope
-      nchan: makems_nchan
-      freq0: makems_freq0
-      direction: makems_direction
       dfreq: makems_dfreq
+      direction: makems_direction
+      dtime: makems_dtime
+      freq0: makems_freq0
+      msname: makems_msname
+      nchan: makems_nchan
       synthesis: makems_synthesis
     out:
     - msname_out
   simulator:
-    run: cwlfiles/simulator.cwl
+    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/simulator.cwl
     in:
+      config: simsky_config
       msname: simms/msname_out
-      use_smearing: simsky_use_smearing
+      skymodel: simsky_skymodel
       output_column: simsky_output_column
       sefd: simsky_sefd
-      skymodel: simsky_skymodel
-      config: simsky_config
+      use_smearing: simsky_use_smearing
     out:
     - msname_out
   wsclean:
-    run: cwlfiles/wsclean.cwl
+    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/wsclean.cwl
     in:
       msname: simulator/msname_out
-      niter: makeimage_niter
-      auto_threshold: makeimage_auto_threshold
-      channels_out: makeimage_channels_out
-      join_channels: makeimage_join_channels
-      scale: makeimage_scale
-      name: makeimage_name
-      datacolumn: makeimage_datacolumn
-      size: makeimage_size
-      mgain: makeimage_mgain
+      name: makeimage1_name
+      auto_threshold: makeimage1_auto_threshold
+      channels_out: makeimage1_channels_out
+      datacolumn: makeimage1_datacolumn
+      fit_spectral_pol: makeimage1_fit_spectral_pol
+      join_channels: makeimage1_join_channels
+      mgain: makeimage1_mgain
+      niter: makeimage1_niter
+      save_source_list: makeimage1_save_source_list
+      scale: makeimage1_scale
+      size: makeimage1_size
     out:
-    - image_out
-    - images_out
+    - dirty_image_out
+    - dirty_images_out
+    - model_image_out
+    - model_images_out
     - msname_out
+    - psf_image_out
+    - psf_images_out
+    - residual_image_out
+    - residual_images_out
+    - restored_image_out
+    - restored_images_out
+    - source_list
   pybdsf:
-    run: cwlfiles/pybdsf.cwl
+    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/pybdsf.cwl
     in:
-      thresh_isl: sourcefinder_thresh_isl
-      filename: wsclean/image_out
-      thresh_pix: sourcefinder_thresh_pix
+      filename: wsclean/restored_image_out
       outfile: sourcefinder_outfile
       format: sourcefinder_format
+      thresh_isl: sourcefinder_thresh_isl
+      thresh_pix: sourcefinder_thresh_pix
     out:
     - model_out
     - models_out
   bdsf_fits2lsm:
-    run: cwlfiles/bdsf_fits2lsm.cwl
+    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/bdsf_fits2lsm.cwl
     in:
-      phase_centre_image: wsclean/image_out
-      outfile: convertfits_outfile
       infile: pybdsf/model_out
+      outfile: convertfits_outfile
+      phase_centre_image: wsclean/restored_image_out
     out:
     - model_out
     - models_out
   tigger_convert:
-    run: cwlfiles/tigger_convert.cwl
+    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/tigger_convert.cwl
     in:
-      output_format: convertcatalog_output_format
-      output_type: convertcatalog_output_type
-      rename: convertcatalog_rename
       input_skymodel: bdsf_fits2lsm/model_out
+      output_format: convertcatalog_output_format
       output_skymodel: convertcatalog_output_skymodel
+      output_type: convertcatalog_output_type
       type: convertcatalog_type
+      rename: convertcatalog_rename
     out:
     - model_out
     - models_out
-  cubical:
-    run: cwlfiles/cubical.cwl
+  tmpyh9lrhqj:
+    run: /tmp/tmpyh9lrhqj.cwl
     in:
-      model_expression: calibration_model_expression
-      g_time_int: calibration_g_time_int
-      sel_ddid: calibration_sel_ddid
-      madmax_plot: calibration_madmax_plot
-      g_save_to: calibration_g_save_to
-      out_plots: calibration_out_plots
-      data_ms: wsclean/msname_out
-      out_mode: calibration_out_mode
-      out_casa_gaintables: calibration_out_casa_gaintables
-      g_freq_int: calibration_g_freq_int
-      madmax_enable: calibration_madmax_enable
-      model_lsm: tigger_convert/models_out
       bbc_save_to: calibration_bbc_save_to
-      montblanc_dtype: calibration_montblanc_dtype
+      data_ms: wsclean/msname_out
       madmax_estimate: calibration_madmax_estimate
-      dist_ncpu: calibration_dist_ncpu
-      out_overwrite: calibration_out_overwrite
-      madmax_threshold: calibration_madmax_threshold
-      g_clip_low: calibration_g_clip_low
-      shared_memory: calibration_shared_memory
-      log_boring: calibration_log_boring
+      model_expression: calibration_model_expression
+      out_mode: calibration_out_mode
       data_column: calibration_data_column
-      g_type: calibration_g_type
-      weight_column: calibration_weight_column
-      sol_term_iters: calibration_sol_term_iters
-      montblanc_mem_budget: calibration_montblanc_mem_budget
-      data_time_chunk: calibration_data_time_chunk
       data_freq_chunk: calibration_data_freq_chunk
-      out_name: calibration_out_name
+      data_time_chunk: calibration_data_time_chunk
+      dist_ncpu: calibration_dist_ncpu
       g_clip_high: calibration_g_clip_high
+      g_clip_low: calibration_g_clip_low
+      g_freq_int: calibration_g_freq_int
+      g_save_to: calibration_g_save_to
       g_solvable: calibration_g_solvable
+      g_time_int: calibration_g_time_int
+      g_type: calibration_g_type
+      log_boring: calibration_log_boring
+      madmax_enable: calibration_madmax_enable
+      madmax_plot: calibration_madmax_plot
+      madmax_threshold: calibration_madmax_threshold
+      model_lsm: tigger_convert/models_out
+      montblanc_dtype: calibration_montblanc_dtype
+      montblanc_mem_budget: calibration_montblanc_mem_budget
+      out_casa_gaintables: calibration_out_casa_gaintables
+      out_column: calibration_out_column
+      out_name: calibration_out_name
+      out_overwrite: calibration_out_overwrite
+      out_plots: calibration_out_plots
+      sel_ddid: calibration_sel_ddid
+      shared_memory: calibration_shared_memory
       sol_jones: calibration_sol_jones
+      sol_term_iters: calibration_sol_term_iters
+      weight_column: calibration_weight_column
     out:
     - casa_plot_out
-    - data_ms_out
+    - msname_out
     - parmdb_save_out
     - plot_out
+  wsclean-1:
+    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/wsclean.cwl
+    in:
+      msname: tmpyh9lrhqj/msname_out
+      name: makeimage2_name
+      auto_threshold: makeimage2_auto_threshold
+      channels_out: makeimage2_channels_out
+      datacolumn: makeimage2_datacolumn
+      fit_spectral_pol: makeimage2_fit_spectral_pol
+      join_channels: makeimage2_join_channels
+      mgain: makeimage2_mgain
+      niter: makeimage2_niter
+      save_source_list: makeimage2_save_source_list
+      scale: makeimage2_scale
+      size: makeimage2_size
+    out:
+    - dirty_image_out
+    - dirty_images_out
+    - model_image_out
+    - model_images_out
+    - msname_out
+    - psf_image_out
+    - psf_images_out
+    - residual_image_out
+    - residual_images_out
+    - restored_image_out
+    - restored_images_out
+    - source_list
+  fitstool:
+    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/fitstool.cwl
+    in:
+      image: wsclean-1/restored_images_out
+      output: makecube1_output
+      fits_axis: makecube1_fits_axis
+      stack: makecube1_stack
+    out:
+    - image_out
+    - images_out
+  sofia:
+    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/sofia.cwl
+    in:
+      SCfind_rmsMode: sofia_mask_SCfind_rmsMode
+      SCfind_threshold: sofia_mask_SCfind_threshold
+      import_inFile: fitstool/image_out
+      merge_minSizeX: sofia_mask_merge_minSizeX
+      merge_minSizeY: sofia_mask_merge_minSizeY
+      merge_minSizeZ: sofia_mask_merge_minSizeZ
+      merge_radiusX: sofia_mask_merge_radiusX
+      merge_radiusY: sofia_mask_merge_radiusY
+      merge_radiusZ: sofia_mask_merge_radiusZ
+      scaleNoise_statistic: sofia_mask_scaleNoise_statistic
+      steps_doCubelets: sofia_mask_steps_doCubelets
+      steps_doFlag: sofia_mask_steps_doFlag
+      steps_doMerge: sofia_mask_steps_doMerge
+      steps_doMom0: sofia_mask_steps_doMom0
+      steps_doMom1: sofia_mask_steps_doMom1
+      steps_doParameterise: sofia_mask_steps_doParameterise
+      steps_doReliability: sofia_mask_steps_doReliability
+      steps_doSCfind: sofia_mask_steps_doSCfind
+      steps_doScaleNoise: sofia_mask_steps_doScaleNoise
+      steps_doWriteCat: sofia_mask_steps_doWriteCat
+      steps_doWriteMask: sofia_mask_steps_doWriteMask
+      writeCat_basename: sofia_mask_writeCat_basename
+    out:
+    - writeOutAscii
+    - writeOutCat
+    - writeOutCubelets
+    - writeOutMask
+    - writeOutMom0
+    - writeOutMom1
+    - writeOutNrch
+  crystalball:
+    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/crystalball.cwl
+    in:
+      ms: wsclean-1/msname_out
+      model_chunks: transfermodel_model_chunks
+      num_sources: transfermodel_num_sources
+      num_workers: transfermodel_num_workers
+      points_only: transfermodel_points_only
+      row_chunks: transfermodel_row_chunks
+      sky_model: wsclean-1/source_list
+      spectra: transfermodel_spectra
+    out:
+    - msname_out

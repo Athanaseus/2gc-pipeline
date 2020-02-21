@@ -29,11 +29,13 @@ recipe.add("simulator", "simsky", {
 },
     doc="Simulate sky model")
 
-recipe.add("wsclean", "makeimage", {
+recipe.add("wsclean", "makeimage1", {
     "msname"               :   recipe.simsky.outputs["msname_out"],
-    "name"                 :   PREFIX,
+    "name"                 :   PREFIX+"-1",
     "datacolumn"           :   "DATA",
+    "save_source_list"     :   True,
     "scale"                :   "1asec",
+    "fit_spectral_pol"     :   2,
     "channels_out"         :   2,
     "join_channels"        :   True,
     "mgain"                :   0.95,
@@ -45,7 +47,7 @@ recipe.add("wsclean", "makeimage", {
     doc="Image data")
 
 recipe.add("pybdsf", "sourcefinder", {
-    "filename"     :   recipe.makeimage.outputs["image_out"],
+    "filename"     :   recipe.makeimage1.outputs["restored_image_out"],
     "outfile"      :   "{}-catalog.fits".format(PREFIX),
     "format"       :   "fits",
     "thresh_isl"   :   20,
@@ -56,8 +58,7 @@ recipe.add("pybdsf", "sourcefinder", {
 
 recipe.add("bdsf_fits2lsm", "convertfits", {
     "infile"             :   recipe.sourcefinder.outputs["model_out"],
-    "phase_centre_image" :   recipe.makeimage.outputs["image_out"],
-#    "phase_centre_coord" :   [0.0, -30.0],
+    "phase_centre_image" :   recipe.makeimage1.outputs["restored_image_out"],
     "outfile"            :   "{}-catalog.lsm.html".format(PREFIX)
 },
     doc="Convert model catalog")
@@ -73,11 +74,13 @@ recipe.add("tigger_convert", "convertcatalog", {
     doc="Convert model catalog")
 
 recipe.add('cubical', "calibration", {
-    "data_ms"              :   recipe.makeimage.outputs["msname_out"],
+    "data_ms"              :   recipe.makeimage1.outputs["msname_out"],
     "data_column"          :   "DATA",
+    "out_column"           :   "CORRECTED_DATA",
     "model_lsm"            :   recipe.convertcatalog.outputs["models_out"],
-#    "model_column"         :   ['MODEL_DATA'],
     "model_expression"     :   ["lsm_0"],
+#    "model_column"         :   ['MODEL_DATA"], or use model column instead
+#    "model_expression"     :   ["col_0"],
     "data_time_chunk"      :   24, #128,
     "data_freq_chunk"      :   12, #1024,
     "sel_ddid"             :   "0",
@@ -85,7 +88,7 @@ recipe.add('cubical', "calibration", {
     "sol_jones"            :   "G",
     "sol_term_iters"       :   "50",
     "out_name"             :   PREFIX,
-    "out_mode"             :   "sc",
+    "out_mode"             :   "ac",
     "weight_column"        :   "WEIGHT",
     "montblanc_dtype"      :   "float",
     "g_type"               :   "complex-2x2",
@@ -109,6 +112,80 @@ recipe.add('cubical', "calibration", {
 },
     doc="Calibration")
 
-recipe.collect_outputs(["makems", "simsky", "makeimage", "sourcefinder", "calibration"])
+recipe.add("wsclean", "makeimage2", {
+    "msname"               :   recipe.calibration.outputs["msname_out"],
+    "name"                 :   PREFIX+"-2",
+    "datacolumn"           :   "CORRECTED_DATA",
+    "save_source_list"     :   True,
+    "scale"                :   "1asec",
+    "fit_spectral_pol"     :   2,
+    "channels_out"         :   2,
+    "join_channels"        :   True,
+    "mgain"                :   0.95,
+    "scale"                :   "1.0asec",
+    "niter"                :   10000,
+    "auto_threshold"       :   5,
+    "size"                 :   [256, 256]
+},
+    doc="Image data")
+
+recipe.add('fitstool', 'makecube1', {
+    "image": recipe.makeimage2.outputs["restored_images_out"],
+    "output": PREFIX+".cube.image.fits",
+    "stack": True,
+    "fits_axis": "FREQ",
+},
+    doc='Make cube image')
+
+recipe.add('sofia', 'sofia_mask', {
+    "import_inFile": recipe.makecube1.outputs["image_out"],
+    "steps_doFlag": False,
+    "steps_doScaleNoise": True,
+    "steps_doSCfind": True,
+    "steps_doMerge": True,
+    "steps_doReliability": True,
+    "steps_doParameterise": True,
+    "steps_doWriteMask": True,
+    "steps_doMom0": False,
+    "steps_doMom1": False,
+    "steps_doWriteCat": True,
+    "steps_doCubelets": False,
+    "scaleNoise_statistic": 'mad',
+    "SCfind_threshold": 4,
+    "SCfind_rmsMode": 'mad',
+    "merge_radiusX": 3,
+    "merge_radiusY": 3,
+    "merge_radiusZ": 3,
+    "merge_minSizeX": 2,
+    "merge_minSizeY": 2,
+    "merge_minSizeZ": 2,
+    "writeCat_basename": "sofia_mask",
+},
+    doc='Make SoFiA mask')
+
+recipe.add("crystalball", "transfermodel", {
+    "ms": recipe.makeimage2.outputs["msname_out"],
+    "sky_model": recipe.makeimage2.outputs["source_list"],
+    "spectra": True,
+    "row_chunks": 0,
+    "model_chunks": 0,
+    "points_only": False,
+    "num_sources": 0,
+    "num_workers": 8
+},
+    doc="Transfer Model")
+
+recipe.collect_outputs([
+                        "makems",
+                        "simsky",
+                        "makeimage1",
+                        "sourcefinder",
+                        "calibration",
+                        "makeimage2",
+                        "makecube1",
+                        "sofia_mask",
+                        "transfermodel"
+])
 
 recipe.run()
+#recipe.init() # To only generate the cwl files (<name>.cwl  <name>.yml)
