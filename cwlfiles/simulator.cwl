@@ -3,12 +3,14 @@ class: CommandLineTool
 
 requirements:
   DockerRequirement:
-    dockerPull: stimela/meqtrees:1.2.0
+    dockerPull: stimela/meqtrees:1.2.4
   InlineJavascriptRequirement: {}
   InitialWorkDirRequirement:
     listing:
       - entry: $(inputs.msname)
         writable: true
+      - entry: $(inputs.skymodel)
+      - entry: $(inputs.config)
   InplaceUpdateRequirement:
     inplaceUpdate: true
 
