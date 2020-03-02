@@ -1,10 +1,15 @@
 import stimela
 
-CASA_PREDICT = True
 PREFIX = "selfcal"
+CASA_PREDICT = True
+PRIMARY_BEAM = True
 # Models to simulate lsm and/or fits
 LSM = "point_skymodel.txt"
 FITS = "selfcal-1-MFS-model.fits"
+# Imaging params
+NPIX = 256
+CELL = "1asec"
+NCHAN = 2
 
 recipe = stimela.Recipe("selfcal_simulation",
                         indir="input",
@@ -22,6 +27,17 @@ recipe.add("simms", "makems", {
     "nchan"                :   4,
     },
     doc="Create Empty MS")
+
+if PRIMARY_BEAM:
+    recipe.add("eidos", "eidos", {
+        "pixels": NPIX,
+        "freq": "1418 1422 2",
+        "diameter": 1.0,
+        "coeff": 'me',
+        "coefficients_file": "meerkat_beam_coeffs_em_zp_dct.npy",
+        "output_eight": False,
+       },
+       doc='Generate primary beam images')
 
 if not CASA_PREDICT:
     recipe.add("simulator", "simsky", {
@@ -67,15 +83,14 @@ recipe.add("wsclean", "makeimage1", {
     "name"                 :   PREFIX+"-1",
     "datacolumn"           :   "DATA",
     "save_source_list"     :   True,
-    "scale"                :   "1asec",
     "fit_spectral_pol"     :   2,
-    "channels_out"         :   2,
+    "channels_out"         :   NCHAN,
     "join_channels"        :   True,
     "mgain"                :   0.95,
-    "scale"                :   "1.0asec",
+    "scale"                :   CELL,
     "niter"                :   10000,
     "auto_threshold"       :   5,
-    "size"                 :   [256, 256]
+    "size"                 :   [NPIX, NPIX]
     },
     doc="Image data")
 
@@ -145,6 +160,7 @@ recipe.add('cubical', "calibration", {
     },
     doc="Calibration")
 
+
 recipe.add("wsclean", "makeimage2", {
     "msname"               :   recipe.calibration.outputs["msname_out"],
     "name"                 :   PREFIX+"-2",
@@ -152,13 +168,13 @@ recipe.add("wsclean", "makeimage2", {
     "save_source_list"     :   True,
     "scale"                :   "1asec",
     "fit_spectral_pol"     :   2,
-    "channels_out"         :   2,
+    "channels_out"         :   NCHAN,
     "join_channels"        :   True,
     "mgain"                :   0.95,
-    "scale"                :   "1.0asec",
+    "scale"                :   CELL,
     "niter"                :   10000,
     "auto_threshold"       :   5,
-    "size"                 :   [256, 256]
+    "size"                 :   [NPIX, NPIX]
     },
     doc="Image data")
 
@@ -224,8 +240,11 @@ recipe.collect_outputs([
                         "add_data"
                        ] if CASA_PREDICT else [
                         "simsky",
+                       ] + [
+                        "eidos"
+                       ] if PRIMARY_BEAM else [
                        ])
 
-
 recipe.run()
-#recipe.init() # To only generate the cwl files (<name>.cwl  <name>.yml)
+# To only generate the cwl files (<name>.cwl  <name>.yml)
+#recipe.init()
