@@ -1,6 +1,10 @@
 import stimela
 
+CASA_PREDICT = True
 PREFIX = "selfcal"
+# Models to simulate lsm and/or fits
+LSM = "point_skymodel.txt"
+FITS = "selfcal-1-MFS-model.fits"
 
 recipe = stimela.Recipe("selfcal_simulation",
                         indir="input",
@@ -19,18 +23,47 @@ recipe.add("simms", "makems", {
     },
     doc="Create Empty MS")
 
-recipe.add("simulator", "simsky", {
-    "msname"               :   recipe.makems.outputs["msname_out"],
-    "config"               :   "tdlconf.profiles",
-    "use_smearing"         :   False,
-    "sefd"                 :   551,  # in Jy
-    "output_column"        :   "DATA",
-    "skymodel"             :   "point_skymodel.txt"
-},
-    doc="Simulate sky model")
+if not CASA_PREDICT:
+    recipe.add("simulator", "simsky", {
+        "msname"               :   recipe.makems.outputs["msname_out"],
+        "config"               :   "tdlconf.profiles",
+        "use_smearing"         :   False,
+        "sefd"                 :   551,  # in Jy
+        "output_column"        :   "DATA",
+        "skymodel"             :   LSM
+        },
+        doc="Simulate sky model")
+
+if CASA_PREDICT:
+    recipe.add('casa_importfits', 'importfits', {
+        "fitsimage": FITS,
+        "imagename": FITS[:-5]+".im",
+        "overwrite": True,
+        },
+        doc='Import fits to casa image')
+
+    recipe.add('casa_ft', 'predict', {
+        "vis": recipe.makems.outputs["msname_out"],
+        "model": recipe.importfits.outputs["image_out"],
+        "nterms": 1,
+        "incremental": False,
+        "usescratch": True,
+        },
+        doc='Predict vis from model')
+
+    recipe.add("simulator", "add_data", {
+        "msname"               :   recipe.predict.outputs["msname_out"],
+        "config"               :   "tdlconf.profiles",
+        "input_column"         :   "MODEL_DATA",
+        "output_column"        :   "DATA",
+        "sim_mode"             :   "add to MS",
+        "sefd"                 :   551,  # in Jy
+        "skymodel"             :   LSM
+        },
+        doc="Add predicted vis into data column with new model")
 
 recipe.add("wsclean", "makeimage1", {
-    "msname"               :   recipe.simsky.outputs["msname_out"],
+    "msname"               :   recipe.add_data.outputs["msname_out"],
     "name"                 :   PREFIX+"-1",
     "datacolumn"           :   "DATA",
     "save_source_list"     :   True,
@@ -43,7 +76,7 @@ recipe.add("wsclean", "makeimage1", {
     "niter"                :   10000,
     "auto_threshold"       :   5,
     "size"                 :   [256, 256]
-},
+    },
     doc="Image data")
 
 recipe.add("pybdsf", "sourcefinder", {
@@ -52,7 +85,7 @@ recipe.add("pybdsf", "sourcefinder", {
     "format"       :   "fits",
     "thresh_isl"   :   20,
     "thresh_pix"   :   10,
-},
+    },
     doc="Source finding")
 
 
@@ -60,7 +93,7 @@ recipe.add("bdsf_fits2lsm", "convertfits", {
     "infile"             :   recipe.sourcefinder.outputs["model_out"],
     "phase_centre_image" :   recipe.makeimage1.outputs["restored_image_out"],
     "outfile"            :   "{}-catalog.lsm.html".format(PREFIX)
-},
+    },
     doc="Convert model catalog")
 
 recipe.add("tigger_convert", "convertcatalog", {
@@ -70,7 +103,7 @@ recipe.add("tigger_convert", "convertcatalog", {
     "output_type"        :   "Tigger",
     "type"               :   "auto",
     "rename"             :   True,
-},
+    },
     doc="Convert model catalog")
 
 recipe.add('cubical', "calibration", {
@@ -109,7 +142,7 @@ recipe.add('cubical', "calibration", {
     "log_boring"           :   True,
     "shared_memory"        :   4096,
     "montblanc_mem_budget" :   1024,
-},
+    },
     doc="Calibration")
 
 recipe.add("wsclean", "makeimage2", {
@@ -126,7 +159,7 @@ recipe.add("wsclean", "makeimage2", {
     "niter"                :   10000,
     "auto_threshold"       :   5,
     "size"                 :   [256, 256]
-},
+    },
     doc="Image data")
 
 recipe.add('fitstool', 'makecube1', {
@@ -134,7 +167,7 @@ recipe.add('fitstool', 'makecube1', {
     "output": PREFIX+".cube.image.fits",
     "stack": True,
     "fits_axis": "FREQ",
-},
+    },
     doc='Make cube image')
 
 recipe.add('sofia', 'sofia_mask', {
@@ -143,7 +176,7 @@ recipe.add('sofia', 'sofia_mask', {
     "steps_doScaleNoise": True,
     "steps_doSCfind": True,
     "steps_doMerge": True,
-    "steps_doReliability": True,
+    "steps_doReliability": False,
     "steps_doParameterise": True,
     "steps_doWriteMask": True,
     "steps_doMom0": False,
@@ -151,7 +184,7 @@ recipe.add('sofia', 'sofia_mask', {
     "steps_doWriteCat": True,
     "steps_doCubelets": False,
     "scaleNoise_statistic": 'mad',
-    "SCfind_threshold": 4,
+    "SCfind_threshold": 5,
     "SCfind_rmsMode": 'mad',
     "merge_radiusX": 3,
     "merge_radiusY": 3,
@@ -160,7 +193,7 @@ recipe.add('sofia', 'sofia_mask', {
     "merge_minSizeY": 2,
     "merge_minSizeZ": 2,
     "writeCat_basename": "sofia_mask",
-},
+    },
     doc='Make SoFiA mask')
 
 recipe.add("crystalball", "transfermodel", {
@@ -170,22 +203,29 @@ recipe.add("crystalball", "transfermodel", {
     "row_chunks": 0,
     "model_chunks": 0,
     "points_only": False,
-    "num_sources": 0,
     "num_workers": 8
-},
+    },
     doc="Transfer Model")
 
 recipe.collect_outputs([
                         "makems",
-                        "simsky",
                         "makeimage1",
                         "sourcefinder",
+                        "convertfits",
+                        "convertcatalog",
                         "calibration",
                         "makeimage2",
                         "makecube1",
                         "sofia_mask",
                         "transfermodel"
-])
+                       ] + [
+                        "importfits",
+                        "predict",
+                        "add_data"
+                       ] if CASA_PREDICT else [
+                        "simsky",
+                       ])
+
 
 recipe.run()
 #recipe.init() # To only generate the cwl files (<name>.cwl  <name>.yml)
