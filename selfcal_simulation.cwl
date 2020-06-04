@@ -382,7 +382,7 @@ steps:
     out:
     - msname_out
   wsclean:
-    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/wsclean.cwl
+    run: cwlfiles/wsclean.cwl
     in:
       msname: simulator/msname_out
       name: makeimage1_name
@@ -410,7 +410,7 @@ steps:
     - restored_images_out
     - source_list
   pybdsf:
-    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/pybdsf.cwl
+    run: cwlfiles/pybdsf.cwl
     in:
       filename: wsclean/restored_image_out
       outfile: sourcefinder_outfile
@@ -421,7 +421,7 @@ steps:
     - model_out
     - models_out
   bdsf_fits2lsm:
-    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/bdsf_fits2lsm.cwl
+    run: cwlfiles/bdsf_fits2lsm.cwl
     in:
       infile: pybdsf/model_out
       outfile: convertfits_outfile
@@ -430,7 +430,7 @@ steps:
     - model_out
     - models_out
   tigger_convert:
-    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/tigger_convert.cwl
+    run: cwlfiles/tigger_convert.cwl
     in:
       input_skymodel: bdsf_fits2lsm/model_out
       output_format: convertcatalog_output_format
@@ -483,7 +483,7 @@ steps:
     - parmdb_save_out
     - plot_out
   wsclean-1:
-    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/wsclean.cwl
+    run: cwlfiles/wsclean.cwl
     in:
       msname: tmpyh9lrhqj/msname_out
       name: makeimage2_name
@@ -511,7 +511,7 @@ steps:
     - restored_images_out
     - source_list
   fitstool:
-    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/fitstool.cwl
+    run: cwlfiles/fitstool.cwl
     in:
       image: wsclean-1/restored_images_out
       output: makecube1_output
@@ -521,7 +521,7 @@ steps:
     - image_out
     - images_out
   sofia:
-    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/sofia.cwl
+    run: cwlfiles/sofia.cwl
     in:
       SCfind_rmsMode: sofia_mask_SCfind_rmsMode
       SCfind_threshold: sofia_mask_SCfind_threshold
@@ -554,7 +554,7 @@ steps:
     - writeOutMom1
     - writeOutNrch
   crystalball:
-    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/crystalball.cwl
+    run: cwlfiles/crystalball.cwl
     in:
       ms: wsclean-1/msname_out
       model_chunks: transfermodel_model_chunks
