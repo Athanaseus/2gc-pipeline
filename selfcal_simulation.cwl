@@ -248,21 +248,21 @@ outputs:
       type: array
       items: File
   calibration_0:
-    outputSource: tmpyh9lrhqj/casa_plot_out
+    outputSource: cubical/casa_plot_out
     type:
     - 'null'
     - type: array
       items: Directory
   calibration_1:
-    outputSource: tmpyh9lrhqj/msname_out
+    outputSource: cubical/msname_out
     type: Directory
   calibration_2:
-    outputSource: tmpyh9lrhqj/parmdb_save_out
+    outputSource: cubical/parmdb_save_out
     type:
       type: array
       items: File
   calibration_3:
-    outputSource: tmpyh9lrhqj/plot_out
+    outputSource: cubical/plot_out
     type: Directory
   makeimage2_0:
     outputSource: wsclean-1/dirty_image_out
@@ -485,7 +485,7 @@ steps:
   wsclean-1:
     run: cwlfiles/wsclean.cwl
     in:
-      msname: tmpyh9lrhqj/msname_out
+      msname: cubical/msname_out
       name: makeimage2_name
       auto_threshold: makeimage2_auto_threshold
       channels_out: makeimage2_channels_out
