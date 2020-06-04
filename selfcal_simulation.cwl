@@ -441,7 +441,7 @@ steps:
     out:
     - model_out
     - models_out
-  cybical:
+  cubical:
     run: cwlfiles/cubical.cwl
     in:
       bbc_save_to: calibration_bbc_save_to
