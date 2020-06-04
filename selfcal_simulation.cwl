@@ -114,7 +114,7 @@ inputs:
   calibration_weight_column: string
   calibration_montblanc_dtype: string
   calibration_g_type: string
-  calibration_g_time_int: float
+  calibration_g_time_int: int
   calibration_g_freq_int: float
   calibration_g_save_to: string
   calibration_bbc_save_to: string
