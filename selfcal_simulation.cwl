@@ -441,8 +441,8 @@ steps:
     out:
     - model_out
     - models_out
-  tmpyh9lrhqj:
-    run: /tmp/tmpyh9lrhqj.cwl
+  cybical:
+    run: cwlfiles/cubical.cwl
     in:
       bbc_save_to: calibration_bbc_save_to
       data_ms: wsclean/msname_out
