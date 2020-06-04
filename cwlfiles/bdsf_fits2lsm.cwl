@@ -1,4 +1,4 @@
-cwlVersion: v1.1
+cwlVersion: v1.0
 class: CommandLineTool
 
 requirements:
@@ -12,7 +12,8 @@ requirements:
     listing:
       - entry: $(inputs.infile)
         writable: true
-
+  InplaceUpdateRequirement:
+    inplaceUpdate: true
 
 baseCommand: python
 
