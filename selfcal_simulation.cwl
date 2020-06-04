@@ -358,7 +358,7 @@ outputs:
     type: Directory
 steps:
   simms:
-    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/simms.cwl
+    run: cwlfiles/simms.cwl
     in:
       telescope: makems_telescope
       dfreq: makems_dfreq
@@ -371,7 +371,7 @@ steps:
     out:
     - msname_out
   simulator:
-    run: /home/athanaseus/Documents/gitPackages/Stimela/stimela/cargo/cab/simulator.cwl
+    run: cwlfiles/simulator.cwl
     in:
       config: simsky_config
       msname: simms/msname_out
