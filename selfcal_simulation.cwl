@@ -248,21 +248,21 @@ outputs:
       type: array
       items: File
   calibration_0:
-    outputSource: cubical/casa_plot_out
+    outputSource: calibration/casa_plot_out
     type:
     - 'null'
     - type: array
       items: Directory
   calibration_1:
-    outputSource: cubical/msname_out
+    outputSource: calibration/msname_out
     type: Directory
   calibration_2:
-    outputSource: cubical/parmdb_save_out
+    outputSource: calibration/parmdb_save_out
     type:
       type: array
       items: File
   calibration_3:
-    outputSource: cubical/plot_out
+    outputSource: calibration/plot_out
     type: Directory
   makeimage2_0:
     outputSource: wsclean-1/dirty_image_out
