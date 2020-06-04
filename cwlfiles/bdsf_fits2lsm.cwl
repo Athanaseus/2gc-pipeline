@@ -12,8 +12,7 @@ requirements:
     listing:
       - entry: $(inputs.infile)
         writable: true
-  InplaceUpdateRequirement:
-    inplaceUpdate: true
+
 
 baseCommand: python
 
